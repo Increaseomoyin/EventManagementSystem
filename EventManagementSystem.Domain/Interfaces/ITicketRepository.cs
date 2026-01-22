@@ -11,11 +11,12 @@ namespace EventManagementSystem.Domain.Interfaces
         //Get Methods
         Task<bool> ExistsAsync(int ticketId);
         Task<Ticket> GetByIdAsync(int ticketId);
-        Task<ICollection<Ticket>> GetByEventAsync(int eventId);
-        Task<ICollection<Ticket>> GetAllAsync();
+        Task<IEnumerable<Ticket>> GetAsync(
+            int? eventId,
+            int Page = 1,
+            int PageNumber = 10);
         //create Methods 
         Task CreateAsync(Ticket ticket);
-        Task<int> CountByEventAsync(int eventId);
 
 
     }
