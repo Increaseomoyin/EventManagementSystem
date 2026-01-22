@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EventManagementSystem.Application.DTOs.ProducerDto;
 using EventManagementSystem.Application.Interfaces.Services;
+using EventManagementSystem.Application.Queries;
 using EventManagementSystem.Domain.Entities;
 using EventManagementSystem.Domain.Interfaces;
 using System;
@@ -31,10 +32,15 @@ namespace EventManagementSystem.Infrastructure.Services
             await _producerRepository.DeleteAsync(id);
         }
 
-        public async Task<ICollection<GetProducerDto>> GetAllProducersAsync()
+        public async Task<IEnumerable<GetProducerDto>> GetProducersAsync(ProducerQuery query)
         {
-            var producers = await _producerRepository.GetAllAsync();
-            var producerMap = _mapper.Map<ICollection<GetProducerDto>>(producers);
+            var producers = await _producerRepository.GetAsync(
+                query.Name,
+                query.Page,
+                query.PageSize
+                );
+
+            var producerMap = _mapper.Map<IEnumerable<GetProducerDto>>(producers);
             return producerMap;
         }
 
@@ -45,13 +51,7 @@ namespace EventManagementSystem.Infrastructure.Services
             return producerMap;
         }
 
-        public async Task<GetProducerDto> GetProducerByNameAsync(string name)
-        {
-            var producer = await _producerRepository.GetByNameAsync(name);
-            var producerMap = _mapper.Map<GetProducerDto>(producer);
-            return producerMap;
-
-        }
+       
 
         public async Task UpdateAsync(UpdateProducerDto producerUpdate)
         {

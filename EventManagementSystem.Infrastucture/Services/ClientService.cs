@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EventManagementSystem.Application.DTOs.ClientDto;
 using EventManagementSystem.Application.Interfaces.Services;
+using EventManagementSystem.Application.Queries;
 using EventManagementSystem.Domain.Entities;
 using EventManagementSystem.Domain.Interfaces;
 using System;
@@ -42,11 +43,15 @@ namespace EventManagementSystem.Infrastructure.Services
             
         }
 
-        public async Task<ICollection<GetClientDto>> GetAllClientAsync()
+        public async Task<IEnumerable<GetClientDto>> GetClientAsync(ClientQuery query)
         {
-            var clients = await _clientRepository.GetAllAsync();
-            var clientsMap = _mapper.Map<ICollection<GetClientDto>>(clients);
+            var clients = await _clientRepository.GetAllAsync(
+                query.Name,
+                query.Page,
+                query.PageSize);
+            var clientsMap = _mapper.Map<IEnumerable<GetClientDto>>(clients);
             return clientsMap;
+
         }
 
         public async Task<GetClientDto> GetClientByIdAsync(int id)
@@ -56,11 +61,6 @@ namespace EventManagementSystem.Infrastructure.Services
             return clientMap;
         }
 
-        public async Task<GetClientDto> GetClientByNameAsync(string name)
-        {
-            var client = await _clientRepository.GetByNameAsync(name);
-            var clientMap = _mapper.Map<GetClientDto>(client);
-            return clientMap;
-        }
+      
     }
 }

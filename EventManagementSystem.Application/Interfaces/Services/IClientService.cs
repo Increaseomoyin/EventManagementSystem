@@ -1,4 +1,5 @@
 ﻿using EventManagementSystem.Application.DTOs.ClientDto;
+using EventManagementSystem.Application.Queries;
 using EventManagementSystem.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,8 @@ namespace EventManagementSystem.Application.Interfaces.Services
     public interface IClientService
     {
         //Get methods
-        Task<ICollection<GetClientDto>> GetAllClientAsync();
+        Task<IEnumerable<GetClientDto>> GetClientAsync(ClientQuery query);
         Task<GetClientDto> GetClientByIdAsync(int id);
-        Task<GetClientDto> GetClientByNameAsync(string name);
         //Create Methods
         Task CreateClientAsync(CreateClientDto client);
         //Update Methods
