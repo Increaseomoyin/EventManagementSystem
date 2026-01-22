@@ -17,7 +17,7 @@ namespace EventManagementSystem.Domain.Entities
         //Number of tickets available for sale
         public int TotalTickets { get; set; }
         //TicketsSold
-        public int TicketsSold { get; set; }
+        public int TicketsSold { get; set; } = 0;
         //Link to Tickets
         public ICollection<Ticket>? Tickets { get; set; }
         public ICollection<EventAttendee>? EventAttendees { get; set; }

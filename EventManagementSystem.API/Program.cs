@@ -70,8 +70,8 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 //Register Services
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IProducerService, ProducerService>();
-//builder.Services.AddScoped<IEventService, EventService>();
-//builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 

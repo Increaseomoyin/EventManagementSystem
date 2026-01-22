@@ -14,7 +14,7 @@ namespace EventManagementSystem.Domain.Entities
         public int EventId { get; set; }
         public Event? Event { get; set; }
         //Ticket numnber
-        public string? TicketNumber { get; set; }
-        public DateTime PurchasedAt { get; set; }
+        public string? TicketNumber { get; set; } 
+        public DateTime PurchasedAt { get; set; } = DateTime.UtcNow;
     }
 }
