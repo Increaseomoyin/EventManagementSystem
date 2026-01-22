@@ -21,16 +21,32 @@ namespace EventManagementSystem.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetClientsAsync([FromQuery] ClientQuery query)
         {
-
-            var clients = await _clientService.GetClientAsync(query);
-            return Ok(clients);
+            try
+            {
+                var clients = await _clientService.GetClientAsync(query);
+                return Ok(clients);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+          
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetClientByIdAsync(int id)
         {
-            var client = await _clientService.GetClientByIdAsync(id);
-            return Ok(client);
+
+            try
+            {
+                 var client = await _clientService.GetClientByIdAsync(id);
+                 return Ok(client);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+           
         }
 
         
@@ -38,19 +54,37 @@ namespace EventManagementSystem.API.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateClientAsync(int id,  [FromBody] UpdateClientDto dto)
         {
-            if (id != dto.Id)
-                return BadRequest();
-            await _clientService.UpdateClientAsync(dto);
-            return NoContent();
+            try
+            {
+                if (id != dto.Id)
+                    return BadRequest();
+                await _clientService.UpdateClientAsync(dto);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+            
         }
 
         //DELETE REQUEST
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteClientAsync(int id)
         {
-            
-            await _clientService.DeleteClientAsync(id);
-            return NoContent();
+
+            try
+            {
+                await _clientService.DeleteClientAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+         
         }
 
     }

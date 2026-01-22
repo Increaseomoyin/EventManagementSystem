@@ -21,22 +21,45 @@ namespace EventManagementSystem.API.Controllers
         [HttpPost("register/client")]
         public async Task<IActionResult> RegisterClient([FromBody] RegisterDto dto)
         {
-            await _authService.RegisterClientAsync(dto);
-            return Ok();
+            try
+            {
+                await _authService.RegisterClientAsync(dto);
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+           
         }
 
         [HttpPost("register/producer")]
         public async Task<IActionResult> RegisterProducer([FromBody] RegisterDto dto)
         {
-          
-            await _authService.RegisterProducerAync(dto);
-            return Ok();
+            try
+            {
+                await _authService.RegisterProducerAync(dto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
         [HttpPost("login")]
         public async Task<IActionResult> LoginUser([FromBody] LoginDto dto)
         {
-            var result = await _authService.LoginUserAsync(dto);
-            return Ok(result);
+            try
+            {
+                var result = await _authService.LoginUserAsync(dto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
     }
     

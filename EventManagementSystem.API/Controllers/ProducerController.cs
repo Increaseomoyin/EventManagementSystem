@@ -23,33 +23,67 @@ namespace EventManagementSystem.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProducers([FromQuery] ProducerQuery query)
         {
-            var producers = await _producerService.GetProducersAsync(query);
-            return Ok(producers);
+
+            try
+            {
+                var producers = await _producerService.GetProducersAsync(query);
+                return Ok(producers);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetProducerById(int id)
         {
-            var producer = await _producerService.GetProducerByIdAsync(id);
-            return Ok(producer);
+            try
+            {
+                var producer = await _producerService.GetProducerByIdAsync(id);
+                return Ok(producer);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+         
         }
 
         //UPDATE REQUEST
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateProducerAsync(int id, [FromBody] UpdateProducerDto dto)
         {
-            if (id != dto.Id)
-                return BadRequest();
-            await _producerService.UpdateAsync(dto);
-            return NoContent();
+            try
+            {
+                if (id != dto.Id)
+                    return BadRequest();
+                await _producerService.UpdateAsync(dto);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+           
+            
         }
 
         //DELETE REQUEST
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteProducreAsync(int id)
         {
+            try
+            {
+                await _producerService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
-            await _producerService.DeleteAsync(id);
-            return NoContent();
+           
         }
     }
 }
