@@ -39,11 +39,17 @@ namespace EventManagementSystem.Infrastructure.Repositories
             return producer ? true : false;
         }
 
-        public async Task<ICollection<Producer>> GetAllAsync()
+      
+
+        public async Task<IEnumerable<Producer>> GetAsync(string? name = null, int Page = 1, int PageSize = 10)
         {
-            var producers = await _dataContext.Producers.OrderBy(p => p.Id)
+            var producers = _dataContext.Producers.AsQueryable();
+            if(!string.IsNullOrWhiteSpace(name))
+                producers = producers.Where(p=> p.Name.Contains(name));
+            return await producers
+                .Skip(Page-1)
+                .Take(PageSize)
                 .ToListAsync();
-            return producers;
         }
 
         public async Task<Producer> GetByIdAsync(int id)
@@ -52,11 +58,7 @@ namespace EventManagementSystem.Infrastructure.Repositories
             return producer;
         }
 
-        public async Task<Producer> GetByNameAsync(string name)
-        {
-            var producer = await _dataContext.Producers.FirstOrDefaultAsync(p=>p.Name == name);
-            return producer;
-        }
+     
 
         public async Task UpdateAsync(Producer producerUpdate)
         {

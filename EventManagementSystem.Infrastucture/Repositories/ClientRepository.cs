@@ -39,22 +39,20 @@ namespace EventManagementSystem.Infrastructure.Repositories
             return client ? true : false;
         }
 
-        public async Task<ICollection<Client>> GetAllAsync()
+        public async Task<IEnumerable<Client>> GetAllAsync(string? name = null, int page = 1, int pageSize = 10)
         {
-            var clients = await _dataContext.Clients.OrderBy(c=>c.Id)
+            var clients = _dataContext.Clients.AsQueryable();
+            if(!string.IsNullOrWhiteSpace(name))
+                 clients = clients.Where(c=>c.Name.Contains(name));
+            return await clients
+                .Skip(page - 1)
+                .Take(pageSize) 
                 .ToListAsync();
-            return clients;
         }
 
         public async Task<Client> GetByIdAsync(int id)
         {
             var client = await _dataContext.Clients.FirstOrDefaultAsync(c => c.Id == id);
-            return client;
-        }
-
-        public async Task<Client> GetByNameAsync(string name)
-        {
-            var client = await _dataContext.Clients.FirstOrDefaultAsync(c => c.Name == name);
             return client;
         }
 

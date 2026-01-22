@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EventManagementSystem.API.Controllers.AuthController
+namespace EventManagementSystem.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -8,9 +8,11 @@ namespace EventManagementSystem.Domain.Interfaces
     public interface IProducerRepository
     {
         //Get methods
-        Task<ICollection<Producer>> GetAllAsync();
+        Task<IEnumerable<Producer>> GetAsync(
+            string ?name =null,
+            int Page = 1,
+            int PageSize = 10);
         Task<Producer> GetByIdAsync(int id);
-        Task<Producer> GetByNameAsync(string name);
         //Create Methods
         Task<bool> ExistsAsync(int Id);
         Task CreateAsync(Producer producerCreate);

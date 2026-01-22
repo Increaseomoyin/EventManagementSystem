@@ -39,10 +39,24 @@ namespace EventManagementSystem.Infrastructure.Repositories
             return existingEvent ? true : false;
         }
 
-        public async Task<ICollection<Event>> GetAllAsync()
+        public async Task<IEnumerable<Event>> GetAsync(
+            string? name = null,
+            string? producerName = null,
+            int Page = 1,
+            int PageSize = 10)
         {
-            var events = await _dataContext.Events.OrderBy(e => e.Id).ToListAsync();
-            return events;
+            var events = _dataContext.Events.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(name))
+                events = events.Where(e => e.Name.Contains(name));
+            if(!string.IsNullOrWhiteSpace(producerName))
+            {
+                events = events.Where(e => e.Producer != null && e.Producer.Name.Contains(producerName));
+            }
+
+            return await events
+                .Skip(Page-1)
+                .Take(PageSize)
+                .ToListAsync();
         }
 
         public async Task<Event> GetByIdAsync(int id)
@@ -51,11 +65,7 @@ namespace EventManagementSystem.Infrastructure.Repositories
             return existingEvent;
         }
 
-        public async Task<Event> GetByNameAsync(string name)
-        {
-            var existingEvent = await _dataContext.Events.FirstOrDefaultAsync(e => e.Name == name);
-            return existingEvent;
-        }
+        
 
         public async Task<ICollection<Event>> GetByProducerAsync(string producerName)
         {

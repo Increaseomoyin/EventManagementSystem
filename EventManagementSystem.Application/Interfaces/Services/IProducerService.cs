@@ -1,4 +1,5 @@
 ﻿using EventManagementSystem.Application.DTOs.ProducerDto;
+using EventManagementSystem.Application.Queries;
 using EventManagementSystem.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,8 @@ namespace EventManagementSystem.Application.Interfaces.Services
     {
 
         //Get methods
-        Task<ICollection<GetProducerDto>> GetAllProducersAsync();
+        Task<IEnumerable<GetProducerDto>> GetProducersAsync(ProducerQuery query);
         Task<GetProducerDto> GetProducerByIdAsync(int id);
-        Task<GetProducerDto> GetProducerByNameAsync(string name);
         //Create Methods
     
         Task CreateAsync(CreateProducerDto producerCreate);

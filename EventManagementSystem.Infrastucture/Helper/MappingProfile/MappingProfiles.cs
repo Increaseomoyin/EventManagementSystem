@@ -18,11 +18,11 @@ namespace EventManagementSystem.Infrastructure.Helper.MappingProfile
         {
             CreateMap<Producer, GetProducerDto>();
             CreateMap<Producer, UpdateProducerDto>();
-            CreateMap<Producer, DeleteClientDto>();
-            CreateMap<Client, CreateClientDto>();
+            CreateMap<Producer, DeleteProducerDto>();
+            CreateMap<Producer, CreateProducerDto>();
             CreateMap<CreateProducerDto, Producer>();
-            CreateMap<DeleteProducerDto, Client>();
-            CreateMap<UpdateClientDto, Client>();
+            CreateMap<DeleteProducerDto, Producer>();
+            CreateMap<UpdateProducerDto, Producer>();
             CreateMap<GetProducerDto, Producer>();
 
             CreateMap<Client, GetClientDto>();
