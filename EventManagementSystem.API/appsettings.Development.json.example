@@ -7,13 +7,13 @@
   },
 
   "ConnectionStrings": {
-    "DefaultConnection": ""
+    "DefaultConnection": "YOUR CONNECTION STRING"
   },
 
   "JWT": {
     "Issuer": "http://localhost:7156",
     "Audience": "http://localhost:7156",
-    "SigningKey": "" //A SECURE KEY
+    "SigningKey": "YOUR SECRET KEY" //A SECURE KEY
 
   },
   "AllowedHosts": "*"
