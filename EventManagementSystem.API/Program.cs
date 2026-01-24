@@ -52,7 +52,7 @@ builder.Services.AddSwaggerGen(option =>
             new string[]{}
         }
     });
-    option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "StockMarketApp.xml"));
+    option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "EventManagementSystem.API.xml"));
 
 });
 
