@@ -1,6 +1,7 @@
 ﻿using EventManagementSystem.Application.DTOs.ClientDto;
 using EventManagementSystem.Application.Interfaces.Services;
 using EventManagementSystem.Application.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,12 @@ namespace EventManagementSystem.API.Controllers
             _clientService = clientService;
         }
 
+
+        /// <summary>
+        /// Get All clients / Get Client by Name
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
        // GET REQUESTS
         [HttpGet]
         public async Task<IActionResult> GetClientsAsync([FromQuery] ClientQuery query)
@@ -33,6 +40,11 @@ namespace EventManagementSystem.API.Controllers
           
         }
 
+        /// <summary>
+        /// Get client by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetClientByIdAsync(int id)
         {
@@ -49,9 +61,18 @@ namespace EventManagementSystem.API.Controllers
            
         }
 
-        
+
+
         //UPDATE REQUEST
+
+        /// <summary>
+        /// Update Client details  (only Clients)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "client")]
         public async Task<IActionResult> UpdateClientAsync(int id,  [FromBody] UpdateClientDto dto)
         {
             try
@@ -70,7 +91,14 @@ namespace EventManagementSystem.API.Controllers
         }
 
         //DELETE REQUEST
+        /// <summary>
+        /// Delete a Client from Db  (only Clients)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "client")]
+
         public async Task<IActionResult> DeleteClientAsync(int id)
         {
 

@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventManagementSystem.API.Controllers
-{
+{   
+
+
     [Route("api/[controller]")]
     [ApiController]
     public class AuthenticationController : ControllerBase
@@ -18,6 +20,11 @@ namespace EventManagementSystem.API.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// Use this endpoint to register clients
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost("register/client")]
         public async Task<IActionResult> RegisterClient([FromBody] RegisterDto dto)
         {
@@ -32,7 +39,13 @@ namespace EventManagementSystem.API.Controllers
             }
            
         }
+         
 
+        /// <summary>
+        /// Use this endpoint to register producers
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost("register/producer")]
         public async Task<IActionResult> RegisterProducer([FromBody] RegisterDto dto)
         {
@@ -47,6 +60,12 @@ namespace EventManagementSystem.API.Controllers
             }
             
         }
+
+        /// <summary>
+        /// Use this endpoint to login, and copy the JWT Token.
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost("login")]
         public async Task<IActionResult> LoginUser([FromBody] LoginDto dto)
         {

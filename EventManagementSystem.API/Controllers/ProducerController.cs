@@ -3,6 +3,7 @@ using EventManagementSystem.Application.DTOs.ProducerDto;
 using EventManagementSystem.Application.Interfaces.Services;
 using EventManagementSystem.Application.Queries;
 using EventManagementSystem.Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,11 @@ namespace EventManagementSystem.API.Controllers
         }
 
         //GET REQUESTS
+        /// <summary>
+        /// Get All Producers / Get Producer by Name
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetProducers([FromQuery] ProducerQuery query)
         {
@@ -35,7 +41,13 @@ namespace EventManagementSystem.API.Controllers
             }
             
         }
+        /// <summary>
+        /// Get Producer by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id:int}")]
+
         public async Task<IActionResult> GetProducerById(int id)
         {
             try
@@ -51,7 +63,16 @@ namespace EventManagementSystem.API.Controllers
         }
 
         //UPDATE REQUEST
+
+        /// <summary>
+        /// Update a Producer account
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "producer")]
+
         public async Task<IActionResult> UpdateProducerAsync(int id, [FromBody] UpdateProducerDto dto)
         {
             try
@@ -70,7 +91,15 @@ namespace EventManagementSystem.API.Controllers
         }
 
         //DELETE REQUEST
+
+        /// <summary>
+        /// Delete a Producer account
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "producer")]
+
         public async Task<IActionResult> DeleteProducreAsync(int id)
         {
             try
