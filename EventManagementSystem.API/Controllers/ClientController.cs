@@ -1,6 +1,7 @@
 ﻿using EventManagementSystem.Application.DTOs.ClientDto;
 using EventManagementSystem.Application.Interfaces.Services;
 using EventManagementSystem.Application.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,6 +53,7 @@ namespace EventManagementSystem.API.Controllers
         
         //UPDATE REQUEST
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "client")]
         public async Task<IActionResult> UpdateClientAsync(int id,  [FromBody] UpdateClientDto dto)
         {
             try
@@ -71,6 +73,8 @@ namespace EventManagementSystem.API.Controllers
 
         //DELETE REQUEST
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "client")]
+
         public async Task<IActionResult> DeleteClientAsync(int id)
         {
 

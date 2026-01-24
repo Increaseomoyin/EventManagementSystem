@@ -3,6 +3,7 @@ using EventManagementSystem.Application.DTOs.ProducerDto;
 using EventManagementSystem.Application.Interfaces.Services;
 using EventManagementSystem.Application.Queries;
 using EventManagementSystem.Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,6 +53,8 @@ namespace EventManagementSystem.API.Controllers
 
         //UPDATE REQUEST
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "producer")]
+
         public async Task<IActionResult> UpdateProducerAsync(int id, [FromBody] UpdateProducerDto dto)
         {
             try
@@ -71,6 +74,8 @@ namespace EventManagementSystem.API.Controllers
 
         //DELETE REQUEST
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "producer")]
+
         public async Task<IActionResult> DeleteProducreAsync(int id)
         {
             try

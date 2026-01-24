@@ -1,6 +1,7 @@
 ﻿using EventManagementSystem.Application.DTOs.EventDto;
 using EventManagementSystem.Application.Interfaces.Services;
 using EventManagementSystem.Application.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,6 +35,8 @@ namespace EventManagementSystem.API.Controllers
 
         //CREATE REQUESTS
         [HttpPost]
+        [Authorize(Roles = "producer")]
+
         public async Task<IActionResult> CreateEventsAsync(CreateEventDto dto)
         {
             await _eventService.CreateEventAsync(dto);
@@ -42,6 +45,8 @@ namespace EventManagementSystem.API.Controllers
 
         //UPDATE REQUESTS
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "producer")]
+
         public async Task<IActionResult> UpdateEventsAsync(int id, [FromBody] UpdateEventDto dto)
         {
             if (id != dto.Id)
@@ -52,6 +57,8 @@ namespace EventManagementSystem.API.Controllers
 
         //DELETE REQUESTS
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "producer")]
+
         public async Task<IActionResult> DeleteEventsAsync(int id)
         {
             await _eventService.DeleteEventAsync(id);

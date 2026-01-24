@@ -2,6 +2,7 @@
 using EventManagementSystem.Application.DTOs.TicketDto;
 using EventManagementSystem.Application.Interfaces.Services;
 using EventManagementSystem.Application.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,6 +52,8 @@ namespace EventManagementSystem.API.Controllers
 
         //CREATE REQUESTS
         [HttpPost]
+        [Authorize(Roles = "client")]
+
         public async Task<IActionResult> BuyTicketAsync(CreateTicketDto dto)
         {
             try
