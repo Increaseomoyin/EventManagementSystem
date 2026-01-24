@@ -20,7 +20,11 @@ namespace EventManagementSystem.API.Controllers
         }
 
 
-
+        /// <summary>
+        /// Get Ticket by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetTicketByIdAsync(int id)
         {
@@ -35,6 +39,11 @@ namespace EventManagementSystem.API.Controllers
             }
             
         }
+        /// <summary>
+        /// Get All Tickets / Get Ticket by EventId
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetTicketsAsync([FromQuery] TicketQuery query)
         {
@@ -50,6 +59,11 @@ namespace EventManagementSystem.API.Controllers
           
         }
 
+        /// <summary>
+        /// Buy Ticket (only Clients)
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         //CREATE REQUESTS
         [HttpPost]
         [Authorize(Roles = "client")]

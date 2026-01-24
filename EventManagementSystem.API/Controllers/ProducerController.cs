@@ -21,6 +21,11 @@ namespace EventManagementSystem.API.Controllers
         }
 
         //GET REQUESTS
+        /// <summary>
+        /// Get All Producers / Get Producer by Name
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetProducers([FromQuery] ProducerQuery query)
         {
@@ -36,7 +41,13 @@ namespace EventManagementSystem.API.Controllers
             }
             
         }
+        /// <summary>
+        /// Get Producer by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id:int}")]
+
         public async Task<IActionResult> GetProducerById(int id)
         {
             try
@@ -52,6 +63,13 @@ namespace EventManagementSystem.API.Controllers
         }
 
         //UPDATE REQUEST
+
+        /// <summary>
+        /// Update a Producer account
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPut("{id:int}")]
         [Authorize(Roles = "producer")]
 
@@ -73,6 +91,12 @@ namespace EventManagementSystem.API.Controllers
         }
 
         //DELETE REQUEST
+
+        /// <summary>
+        /// Delete a Producer account
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "producer")]
 

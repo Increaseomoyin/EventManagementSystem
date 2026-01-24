@@ -19,13 +19,23 @@ namespace EventManagementSystem.API.Controllers
         }
 
         //GET REQUESTS
-
+        /// <summary>
+        /// Get Event by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetEventByIdAsync(int id)
         {
             var result = await _eventService.GetEventByIdAsync(id);
             return Ok(result);
         }
+
+        /// <summary>
+        /// Get all Events / Get Events by Name / Get Events by ProducerName
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetEventsAsync([FromQuery] EventQuery query)
         {
@@ -34,6 +44,11 @@ namespace EventManagementSystem.API.Controllers
         }
 
         //CREATE REQUESTS
+        /// <summary>
+        /// Create an Event (only producers)
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "producer")]
 
@@ -44,8 +59,15 @@ namespace EventManagementSystem.API.Controllers
         }
 
         //UPDATE REQUESTS
+        /// <summary>
+        /// Update an Event information (only producers)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPut("{id:int}")]
         [Authorize(Roles = "producer")]
+
 
         public async Task<IActionResult> UpdateEventsAsync(int id, [FromBody] UpdateEventDto dto)
         {
@@ -56,6 +78,12 @@ namespace EventManagementSystem.API.Controllers
         }
 
         //DELETE REQUESTS
+
+        /// <summary>
+        /// Delete an event from Db (only producers)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "producer")]
 
