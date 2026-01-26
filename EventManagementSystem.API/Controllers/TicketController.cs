@@ -13,7 +13,8 @@ namespace EventManagementSystem.API.Controllers
     [Route("api/tickets")]
     [ApiController]
     public class TicketController : ControllerBase
-    {
+    {   
+        //Testinmg the new rules
         private readonly ITicketService _ticketService;
         private readonly IEmailNotificationQueue _emailQueue;
         private readonly IEventService _eventService;
