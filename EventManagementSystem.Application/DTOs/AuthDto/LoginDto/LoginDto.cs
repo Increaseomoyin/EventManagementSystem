@@ -11,6 +11,7 @@ namespace EventManagementSystem.Application.DTOs.AuthDto.LoginDto
         [Required]
 
         public string? UserName { get; set; }
+       
 
         [Required]
         [PasswordPropertyText]

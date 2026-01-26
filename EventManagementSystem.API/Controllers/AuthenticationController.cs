@@ -18,7 +18,7 @@ namespace EventManagementSystem.API.Controllers
         private readonly IAuthService _authService;
         private readonly IEmailNotificationQueue _emailQueue;
 
-        public AuthenticationController(IAuthService authService, IEmailNotificationQueue emailQueue)
+        public AuthenticationController(IAuthService authService, IEmailNotificationQueue emailQueue )
         {
             _authService = authService;
             _emailQueue = emailQueue;
@@ -63,6 +63,13 @@ namespace EventManagementSystem.API.Controllers
             try
             {
                 await _authService.RegisterProducerAync(dto);
+                var emailNotification = new EmailNotificationDto()
+                {
+                    To = dto.Email,
+                    Subject = "Welcome to Event Management System",
+                    Body = $"Hello {dto.Name},<br/>Your registration was successful! <br/> Thank you"
+                };
+                await _emailQueue.QueueAsync(emailNotification);
                 return Ok();
             }
             catch (Exception ex)
@@ -83,6 +90,13 @@ namespace EventManagementSystem.API.Controllers
             try
             {
                 var result = await _authService.LoginUserAsync(dto);
+                var emailNotification = new EmailNotificationDto()
+                {
+                    To = result.Email,
+                    Subject = "Welcome to Event Management System",
+                    Body = $"Hello {result.UserName},<br/>Your Login was successful! <br/> Thank you"
+                };
+                await _emailQueue.QueueAsync(emailNotification);
                 return Ok(result);
             }
             catch (Exception ex)
