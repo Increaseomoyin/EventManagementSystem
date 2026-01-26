@@ -1,9 +1,11 @@
 using EventManagementSystem.Application.Interfaces;
+using EventManagementSystem.Application.Interfaces.Email;
 using EventManagementSystem.Application.Interfaces.Services;
 using EventManagementSystem.Domain.Interfaces;
 using EventManagementSystem.Infrastructure.Data;
 using EventManagementSystem.Infrastructure.Repositories;
 using EventManagementSystem.Infrastructure.Services;
+using EventManagementSystem.Infrastructure.Services.EmailNotification;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -79,8 +81,15 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 
+builder.Services.AddSingleton<IEmailSender, SmtpEmailSender>();
 
 
+builder.Services.AddSingleton<EmailNotificationQueue>();
+builder.Services.AddSingleton<IEmailNotificationQueue>(sp => sp.GetRequiredService<EmailNotificationQueue>());
+
+
+//Background Service
+builder.Services.AddHostedService<EmailBackgroundService>();
 
 
 

@@ -14,6 +14,6 @@ namespace EventManagementSystem.Application.Interfaces.Services
         Task<IEnumerable<GetTicketDto>> GetTicketAsync(
             TicketQuery query);
         //create Methods 
-        Task BuyTicketAsync(CreateTicketDto ticket);
+        Task<string>  BuyTicketAsync(CreateTicketDto ticket);
     }
 }

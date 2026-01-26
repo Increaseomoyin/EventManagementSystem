@@ -10,8 +10,4 @@
     <ProjectReference Include="..\EventManagementSystem.Domain\EventManagementSystem.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\Email\" />
-  </ItemGroup>
-
 </Project>

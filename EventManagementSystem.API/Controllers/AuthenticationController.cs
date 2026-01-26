@@ -1,5 +1,7 @@
 ﻿using EventManagementSystem.Application.DTOs.AuthDto.LoginDto;
 using EventManagementSystem.Application.DTOs.AuthDto.RegisterDto;
+using EventManagementSystem.Application.DTOs.EmailNotificationDto;
+using EventManagementSystem.Application.Interfaces.Email;
 using EventManagementSystem.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,10 +16,12 @@ namespace EventManagementSystem.API.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IEmailNotificationQueue _emailQueue;
 
-        public AuthenticationController(IAuthService authService)
+        public AuthenticationController(IAuthService authService, IEmailNotificationQueue emailQueue)
         {
             _authService = authService;
+            _emailQueue = emailQueue;
         }
 
         /// <summary>
@@ -31,6 +35,13 @@ namespace EventManagementSystem.API.Controllers
             try
             {
                 await _authService.RegisterClientAsync(dto);
+                var emailNotification = new EmailNotificationDto()
+                {
+                    To = dto.Email,
+                    Subject = "Welcome to Event Management System",
+                    Body = $"Hello {dto.Name},<br/>Your registration was successful! <br/> Thank you"
+                };
+                await _emailQueue.QueueAsync(emailNotification);
                 return Ok();
             }
             catch(Exception ex)
