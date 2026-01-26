@@ -89,7 +89,7 @@ namespace EventManagementSystem.API.Controllers
                 {
                     To = email,
                     Subject = $"Ticket Successfully Bought",
-                    Body = $"Your Purchase of the Ticket for Event with Id:{dto.EventId}, Name : {eventName}, and Location: {eventLocation} has been confirmed"
+                    Body = $"Your Purchase of the Ticket for Event with <br/> Id: {dto.EventId}, <br/> Name : {eventName},<br/> Location: {eventLocation} has been confirmed"
                 };
                 await _emailQueue.QueueAsync(emailNotification);
                 return NoContent();

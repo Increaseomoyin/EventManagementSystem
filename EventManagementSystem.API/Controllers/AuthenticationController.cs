@@ -93,7 +93,7 @@ namespace EventManagementSystem.API.Controllers
                 var emailNotification = new EmailNotificationDto()
                 {
                     To = result.Email,
-                    Subject = "Welcome to Event Management System",
+                    Subject = "Welcome Back to Event Management System",
                     Body = $"Hello {result.UserName},<br/>Your Login was successful! <br/> Thank you"
                 };
                 await _emailQueue.QueueAsync(emailNotification);
