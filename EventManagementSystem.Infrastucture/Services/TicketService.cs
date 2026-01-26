@@ -4,6 +4,8 @@ using EventManagementSystem.Application.Interfaces.Services;
 using EventManagementSystem.Application.Queries;
 using EventManagementSystem.Domain.Entities;
 using EventManagementSystem.Domain.Interfaces;
+using EventManagementSystem.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,15 +17,19 @@ namespace EventManagementSystem.Infrastructure.Services
         private readonly ITicketRepository _ticketRepository;
         private readonly IMapper _mapper;
         private readonly IEventRepository _eventRepository;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IClientRepository _clientRepository;
 
-        public TicketService(ITicketRepository ticketRepository, IMapper mapper, IEventRepository eventRepository) 
+        public TicketService(ITicketRepository ticketRepository, IMapper mapper, IEventRepository eventRepository, UserManager<AppUser> userManager, IClientRepository clientRepository) 
         {
             _ticketRepository = ticketRepository;
             _mapper = mapper;
             _eventRepository = eventRepository;
+            _userManager = userManager;
+            _clientRepository = clientRepository;
         }
 
-        public async Task BuyTicketAsync(CreateTicketDto ticket)
+        public async Task<string> BuyTicketAsync(CreateTicketDto ticket)
         {
             var eventEntity = await _eventRepository.GetByIdAsync(ticket.EventId);
             if (eventEntity == null)
@@ -45,7 +51,12 @@ namespace EventManagementSystem.Infrastructure.Services
             await _eventRepository.UpdateAsync(eventEntity);
 
 
+            var client = await _clientRepository.GetByIdAsync(ticket.ClientId);
+            var appUserId = client.IdentityUserId;
+            var appUser = await _userManager.FindByIdAsync(appUserId);
+            var email = await _userManager.GetEmailAsync(appUser);
 
+            return email;
 
 
 

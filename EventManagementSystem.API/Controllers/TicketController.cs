@@ -1,5 +1,7 @@
-﻿using EventManagementSystem.Application.DTOs.EventDto;
+﻿using EventManagementSystem.Application.DTOs.EmailNotificationDto;
+using EventManagementSystem.Application.DTOs.EventDto;
 using EventManagementSystem.Application.DTOs.TicketDto;
+using EventManagementSystem.Application.Interfaces.Email;
 using EventManagementSystem.Application.Interfaces.Services;
 using EventManagementSystem.Application.Queries;
 using Microsoft.AspNetCore.Authorization;
@@ -13,10 +15,14 @@ namespace EventManagementSystem.API.Controllers
     public class TicketController : ControllerBase
     {
         private readonly ITicketService _ticketService;
+        private readonly IEmailNotificationQueue _emailQueue;
+        private readonly IEventService _eventService;
 
-        public TicketController(ITicketService ticketService)
+        public TicketController(ITicketService ticketService, IEmailNotificationQueue emailQueue, IEventService eventService)
         {
             _ticketService = ticketService;
+            _emailQueue = emailQueue;
+            _eventService = eventService;
         }
 
 
@@ -31,6 +37,8 @@ namespace EventManagementSystem.API.Controllers
             try
             {
                 var result = await _ticketService.GetTicketByIdAsync(id);
+
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -72,7 +80,18 @@ namespace EventManagementSystem.API.Controllers
         {
             try
             {
-                await _ticketService.BuyTicketAsync(dto);
+                var email = await _ticketService.BuyTicketAsync(dto);
+
+                var eventCurrent = await _eventService.GetEventByIdAsync(dto.EventId);
+                var eventName = eventCurrent.Name;
+                var eventLocation = eventCurrent.Location;
+                var emailNotification = new EmailNotificationDto()
+                {
+                    To = email,
+                    Subject = $"Ticket Successfully Bought",
+                    Body = $"Your Purchase of the Ticket for Event with Id:{dto.EventId}, Name : {eventName}, and Location: {eventLocation} has been confirmed"
+                };
+                await _emailQueue.QueueAsync(emailNotification);
                 return NoContent();
             }
             catch(Exception ex)

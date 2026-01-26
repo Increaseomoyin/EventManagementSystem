@@ -17,5 +17,12 @@
     "SigningKey": "YOUR SECRET KEY" //A SECURE KEY
 
   },
+  "Email": {
+    "SmtpHost": "YOUR HOST",
+    "SmtpPort": "YOUR PORT",
+    "SmtpUser": "YOUR MAIL",
+    "SmtpPass": "YOUR PASSWORD"
+  },
+
   "AllowedHosts": "*"
 }
