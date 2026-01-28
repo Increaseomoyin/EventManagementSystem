@@ -48,6 +48,15 @@ namespace EventManagementSystem.Infrastructure.Services
 
             eventEntity.TicketsSold++;
 
+
+            var eventattendee = new EventAttendee()
+            {
+                ClientId = ticket.ClientId,
+                EventId = ticket.EventId,
+            };
+
+            eventEntity.EventAttendees.Add(eventattendee);
+
             await _eventRepository.UpdateAsync(eventEntity);
 
 

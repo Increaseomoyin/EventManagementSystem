@@ -26,7 +26,7 @@ namespace EventManagementSystem.Infrastructure.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<IdentityRole>()
-                .HasData(
+                .HasData( 
                    new IdentityRole
                    {
                        Id = "1",
