@@ -34,10 +34,17 @@ namespace EventManagementSystem.Infrastructure.Services
             var eventEntity = await _eventRepository.GetByIdAsync(ticket.EventId);
             if (eventEntity == null)
                 throw new Exception("Event not found");
+            // ✅ 1. Business rule: one client per event
+            var alreadyAttending = eventEntity.EventAttendees
+                .Any(ea => ea.ClientId == ticket.ClientId);
+
+            if (alreadyAttending)
+                throw new Exception("Client already has a ticket for this event");
             if (eventEntity.TicketsSold >= eventEntity.TotalTickets)
             {
                 throw new Exception("Tickets sold out");
             }
+
             var nextNumber = eventEntity.TicketsSold + 1;
             var ticketNumber = $"EVT{eventEntity.Id} - {nextNumber}";
 

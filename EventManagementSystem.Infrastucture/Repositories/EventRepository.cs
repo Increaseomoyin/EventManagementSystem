@@ -61,7 +61,9 @@ namespace EventManagementSystem.Infrastructure.Repositories
 
         public async Task<Event> GetByIdAsync(int id)
         {
-            var existingEvent = await _dataContext.Events.FirstOrDefaultAsync(e => e.Id == id);
+            var existingEvent = await _dataContext.Events
+                .Include(e=>e.EventAttendees)
+                .FirstOrDefaultAsync(e => e.Id == id);
             return existingEvent;
         }
 
