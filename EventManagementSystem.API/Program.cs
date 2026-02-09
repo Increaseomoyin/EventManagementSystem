@@ -9,7 +9,6 @@ using EventManagementSystem.Infrastructure.Services.EmailNotification;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
@@ -125,6 +124,10 @@ try
         context.Database.Migrate(); // ensures tables exist
     }
 
+    // **Developer Exception Page for Azure debugging**
+    // Shows full stack trace in browser temporarily
+    app.UseDeveloperExceptionPage();
+
     // Middleware
     app.UseSwagger();
     app.UseSwaggerUI(options =>
@@ -143,8 +146,13 @@ try
 }
 catch (Exception ex)
 {
-    // Logs exact startup error to Azure stdout / Log Stream
+    // Logs exact startup error to Azure Log Stream
     Console.WriteLine("Startup error: " + ex.Message);
     Console.WriteLine(ex.StackTrace);
+    if (ex.InnerException != null)
+    {
+        Console.WriteLine("Inner Exception: " + ex.InnerException.Message);
+        Console.WriteLine(ex.InnerException.StackTrace);
+    }
     throw;
 }
