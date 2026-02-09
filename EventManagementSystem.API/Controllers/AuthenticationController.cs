@@ -25,7 +25,7 @@ namespace EventManagementSystem.API.Controllers
         }
 
         /// <summary>
-        /// Use this endpoint to register clients
+        /// USE THIS endpoint to register clients
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
