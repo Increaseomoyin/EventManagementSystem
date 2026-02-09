@@ -15,158 +15,136 @@ using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text;
 
-var builder = WebApplication.CreateBuilder(args);
-
-
-//Testing the functionality of Github
-//Testing the Github functionality for the second time
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(option =>
+try
 {
-    option.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "API V1",
-        Version = "v1"
-    });
+    var builder = WebApplication.CreateBuilder(args);
 
-    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    // Add services
+    builder.Services.AddControllers();
+
+    // Swagger
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen(option =>
     {
-        In = ParameterLocation.Header,
-        Description = "Please enter a valid token",
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        BearerFormat = "JWT",
-        Scheme = "Bearer"
-    });
-    option.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
+        option.SwaggerDoc("v1", new OpenApiInfo { Title = "API V1", Version = "v1" });
+
+        option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
-            new OpenApiSecurityScheme
+            In = ParameterLocation.Header,
+            Description = "Please enter a valid token",
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            BearerFormat = "JWT",
+            Scheme = "Bearer"
+        });
+
+        option.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
             {
-                Reference = new OpenApiReference
+                new OpenApiSecurityScheme
                 {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
-                }
-            },
-            new string[]{}
-        }
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                new string[]{}
+            }
+        });
+
+        option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "EventManagementSystem.API.xml"));
     });
-    option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "EventManagementSystem.API.xml"));
 
-});
+    // DbContext
+    builder.Services.AddDbContext<DataContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+    // Repositories
+    builder.Services.AddScoped<IClientRepository, ClientRepository>();
+    builder.Services.AddScoped<IProducerRepository, ProducerRepository>();
+    builder.Services.AddScoped<IEventRepository, EventRepository>();
+    builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 
+    // Automapper
+    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-//Register DbContext
-builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-//Register Repositories
+    // Services
+    builder.Services.AddScoped<IClientService, ClientService>();
+    builder.Services.AddScoped<IProducerService, ProducerService>();
+    builder.Services.AddScoped<IEventService, EventService>();
+    builder.Services.AddScoped<ITicketService, TicketService>();
+    builder.Services.AddScoped<IAuthService, AuthService>();
+    builder.Services.AddScoped<ITokenService, TokenService>();
 
-builder.Services.AddScoped<IClientRepository, ClientRepository>();
-builder.Services.AddScoped<IProducerRepository, ProducerRepository>();
-builder.Services.AddScoped<IEventRepository, EventRepository>();
-builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+    // Email
+    builder.Services.AddSingleton<IEmailSender, SmtpEmailSender>();
+    builder.Services.AddSingleton<EmailNotificationQueue>();
+    builder.Services.AddSingleton<IEmailNotificationQueue>(sp => sp.GetRequiredService<EmailNotificationQueue>());
 
-//Automapper
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+    // Background Service
+    builder.Services.AddHostedService<EmailBackgroundService>();
 
-//Register Services
-builder.Services.AddScoped<IClientService, ClientService>();
-builder.Services.AddScoped<IProducerService, ProducerService>();
-builder.Services.AddScoped<IEventService, EventService>();
-builder.Services.AddScoped<ITicketService, TicketService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ITokenService, TokenService>();
-
-
-builder.Services.AddSingleton<IEmailSender, SmtpEmailSender>();
-
-
-builder.Services.AddSingleton<EmailNotificationQueue>();
-builder.Services.AddSingleton<IEmailNotificationQueue>(sp => sp.GetRequiredService<EmailNotificationQueue>());
-
-
-//Background Service
-builder.Services.AddHostedService<EmailBackgroundService>();
-
-
-
-
-//JWT
-builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
-{
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequiredLength = 12;
-})
-.AddEntityFrameworkStores<DataContext>();
-//Add schemes
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme =
-    options.DefaultChallengeScheme =
-    options.DefaultForbidScheme =
-    options.DefaultSignInScheme =
-    options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
+    // Identity + JWT
+    builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["JWT:Issuer"],
-        ValidAudience = builder.Configuration["JWT:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])),
-        RoleClaimType = ClaimTypes.Role
-    };
-});
+        options.Password.RequireDigit = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireNonAlphanumeric = true;
+        options.Password.RequiredLength = 12;
+    }).AddEntityFrameworkStores<DataContext>();
 
+    builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme =
+        options.DefaultChallengeScheme =
+        options.DefaultForbidScheme =
+        options.DefaultSignInScheme =
+        options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
+    }).AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["JWT:Issuer"],
+            ValidAudience = builder.Configuration["JWT:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])),
+            RoleClaimType = ClaimTypes.Role
+        };
+    });
 
+    var app = builder.Build();
 
+    // **Run EF Core migrations on startup**
+    using (var scope = app.Services.CreateScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+        context.Database.Migrate(); // ensures tables exist
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
+    // Middleware
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "EventManagementSystem API");
-        options.RoutePrefix = string.Empty; // Ensures Swagger UI loads at /swagger
+        options.RoutePrefix = string.Empty;
     });
-    
 
+    app.UseHttpsRedirection();
+    app.UseAuthentication();
+    app.UseAuthorization();
 
-//}
+    app.MapControllers();
 
-app.UseHttpsRedirection();
-
-app.UseAuthentication();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+    app.Run();
+}
+catch (Exception ex)
+{
+    // Logs exact startup error to Azure stdout / Log Stream
+    Console.WriteLine("Startup error: " + ex.Message);
+    Console.WriteLine(ex.StackTrace);
+    throw;
+}
