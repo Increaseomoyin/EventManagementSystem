@@ -45,7 +45,7 @@ namespace EventManagementSystem.Infrastructure.Repositories
                 tickets = _dataContext.Tickets.Where(t => t.EventId == eventId);
             }
             return await tickets
-                .Skip(Page - 1)
+                .Skip((Page - 1) * PageNumber)
                 .Take(PageNumber)
                 .ToListAsync();
         }

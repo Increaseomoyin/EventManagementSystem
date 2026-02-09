@@ -45,7 +45,7 @@ namespace EventManagementSystem.Infrastructure.Repositories
             if(!string.IsNullOrWhiteSpace(name))
                  clients = clients.Where(c=>c.Name.Contains(name));
             return await clients
-                .Skip(page - 1)
+                .Skip((page - 1)  * pageSize)
                 .Take(pageSize) 
                 .ToListAsync();
         }

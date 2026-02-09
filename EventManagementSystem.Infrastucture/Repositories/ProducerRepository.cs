@@ -47,7 +47,7 @@ namespace EventManagementSystem.Infrastructure.Repositories
             if(!string.IsNullOrWhiteSpace(name))
                 producers = producers.Where(p=> p.Name.Contains(name));
             return await producers
-                .Skip(Page-1)
+                .Skip((Page-1) * PageSize)
                 .Take(PageSize)
                 .ToListAsync();
         }

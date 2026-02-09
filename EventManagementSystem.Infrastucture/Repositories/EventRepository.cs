@@ -54,7 +54,7 @@ namespace EventManagementSystem.Infrastructure.Repositories
             }
 
             return await events
-                .Skip(Page-1)
+                .Skip((Page-1) * PageSize)
                 .Take(PageSize)
                 .ToListAsync();
         }
